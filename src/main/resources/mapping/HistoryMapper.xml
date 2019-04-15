@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzu.paper.dao.HistoryMapper">
+  <resultMap id="BaseResultMap" type="com.hzu.paper.entity.History">
+    <constructor>
+      <idArg column="YHID" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <idArg column="LWID" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="Brow_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="Title" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    YHID, LWID, Brow_date, Title
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.hzu.paper.entity.HistoryKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from 历史记录表
+    where YHID = #{yhid,jdbcType=VARCHAR}
+      and LWID = #{lwid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.hzu.paper.entity.HistoryKey">
+    delete from 历史记录表
+    where YHID = #{yhid,jdbcType=VARCHAR}
+      and LWID = #{lwid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.hzu.paper.entity.History">
+    insert into 历史记录表 (YHID, LWID, Brow_date, 
+      Title)
+    values (#{yhid,jdbcType=VARCHAR}, #{lwid,jdbcType=VARCHAR}, #{browDate,jdbcType=TIMESTAMP}, 
+      #{title,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hzu.paper.entity.History">
+    insert into 历史记录表
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="yhid != null">
+        YHID,
+      </if>
+      <if test="lwid != null">
+        LWID,
+      </if>
+      <if test="browDate != null">
+        Brow_date,
+      </if>
+      <if test="title != null">
+        Title,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="yhid != null">
+        #{yhid,jdbcType=VARCHAR},
+      </if>
+      <if test="lwid != null">
+        #{lwid,jdbcType=VARCHAR},
+      </if>
+      <if test="browDate != null">
+        #{browDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hzu.paper.entity.History">
+    update 历史记录表
+    <set>
+      <if test="browDate != null">
+        Brow_date = #{browDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="title != null">
+        Title = #{title,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where YHID = #{yhid,jdbcType=VARCHAR}
+      and LWID = #{lwid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hzu.paper.entity.History">
+    update 历史记录表
+    set Brow_date = #{browDate,jdbcType=TIMESTAMP},
+      Title = #{title,jdbcType=VARCHAR}
+    where YHID = #{yhid,jdbcType=VARCHAR}
+      and LWID = #{lwid,jdbcType=VARCHAR}
+  </update>
+
+  <select id="findHistoryByUserId" parameterType="string" resultMap="BaseResultMap">
+    select *
+    from 历史记录表
+    where YHID = #{userId,jdbcType=VARCHAR}
+    ORDER BY Brow_date DESC
+  </select>
+</mapper>
